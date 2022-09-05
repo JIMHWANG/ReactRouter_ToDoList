@@ -1,0 +1,15 @@
+.ToDoListRoot {
+    h1 {
+        padding: 20px 0 0 20px;
+
+        a {
+            width: 243px;
+            height: 39px;
+            background: url(../Image/Title_BG.png);
+            text-indent: 101%;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+        }
+    }
+}
