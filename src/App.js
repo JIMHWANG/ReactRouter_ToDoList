@@ -1,4 +1,4 @@
-import Home from "./Components/Home"
+import Home from "./Components/Home_Login"
 import Function from "./Components/Function"
 import './Style/App.scss';
 import { Routes, Route, Link } from "react-router-dom";
