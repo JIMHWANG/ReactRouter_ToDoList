@@ -1,11 +1,12 @@
-import "../Style/Home.scss";
+import "../Style/Home_Login.scss";
 import { useNavigate } from "react-router-dom";
 import React from 'react';
+import AccountPassword from "./AccountPassword.js";
 
 const { useState, useEffect } = React;
 
 function Home() {
-    let FunctionPageNavigate = useNavigate();
+    let LoginPageNavigate = useNavigate();
     const [account, setAccount] = useState('');
     const [password, setPassword] = useState('');
     const [loginInfo, setLoginInfo] = useState({});
@@ -23,7 +24,7 @@ function Home() {
 
         Loginxhr.onload = function () {
             if (JSON.parse(Loginxhr.responseText).success) {
-                FunctionPageNavigate("/Function");
+                LoginPageNavigate("/Function");
             } else {
                 alert(`登入失敗 : ${JSON.parse(Loginxhr.responseText).message}`)
             }
@@ -32,39 +33,27 @@ function Home() {
     }, [loginInfo]);
 
     return (
-        <>
-            <div className="Home_Login">
-                <div className="Container">
-                    <div className="Login_Container">
-                        <label htmlFor="">帳號 : </label>
-                        <input type="text" placeholder="" name="" id="" value={account} onChange={(e) => {
-                            setAccount(e.target.value);
-                        }} />
-                    </div>
-                    <div className="Login_Container">
-                        <label htmlFor="">密碼 : </label>
-                        <input type="password" name="" id="" value={password} onChange={(e) => {
-                            setPassword(e.target.value);
-                        }} />
-                    </div>
-                    <div className="Login_Button">
-                        <input type="button" value="登入" onClick={() => {
-                            if (!account || !password) {
-                                alert('帳號或密碼未輸入');
-                                return;
-                            }
-                            setLoginInfo({
-                                Account: account,
-                                Password: password
-                            })
-                            setAccount('');
-                            setPassword('');
-                        }} />
-                        <input type="button" value="註冊" />
-                    </div>
-                </div>
+        <div className="Login">
+            <AccountPassword account={account} setAccount={setAccount} password={password} setPassword={setPassword} />
+            <div className="Login_Buttons">
+                <input type="button" value="登入" onClick={() => {
+                    if (!account || !password) {
+                        alert('帳號或密碼未輸入');
+                        return;
+                    }
+                    setLoginInfo({
+                        Account: account,
+                        Password: password
+                    })
+                    setAccount('');
+                    setPassword('');
+                }} />
+                <input type="button" value="註冊" onClick={() => {
+                    LoginPageNavigate("/Register");
+                    <AccountPassword account={account} setAccount={setAccount} password={password} setPassword={setPassword} />
+                }} />
             </div>
-        </>
+        </div>
     );
 }
 
