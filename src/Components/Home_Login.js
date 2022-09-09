@@ -25,6 +25,7 @@ function Home() {
 
         Loginxhr.onload = function () {
             if (JSON.parse(Loginxhr.responseText).success) {
+                alert(`登入成功 : ${JSON.parse(Loginxhr.responseText).message}`)
                 LoginPageNavigate("/Function");
             } else {
                 alert(`登入失敗 : ${JSON.parse(Loginxhr.responseText).message}`)
