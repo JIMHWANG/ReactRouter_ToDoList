@@ -1,4 +1,5 @@
 import AccountPassword from "./AccountPassword";
+import LoginRegisterPic from "./LoginRegisterPic";
 import { useNavigate } from "react-router-dom";
 import "../Style/Register.scss";
 import React from 'react';
@@ -38,6 +39,7 @@ function Register() {
 
     return (
         <div className="Register">
+            <LoginRegisterPic />
             <h2>歡迎加入</h2>
             <AccountPassword account={RegisterAccount} setAccount={setRegisterAccount} password={RegisterPassword} setPassword={setRegisterPassword} />
             <div className="Register_Buttons">

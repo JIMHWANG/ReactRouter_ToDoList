@@ -2,6 +2,7 @@ import "../Style/Home_Login.scss";
 import { useNavigate } from "react-router-dom";
 import React from 'react';
 import AccountPassword from "./AccountPassword.js";
+import LoginRegisterPic from "./LoginRegisterPic.js";
 
 const { useState, useEffect } = React;
 
@@ -34,6 +35,7 @@ function Home() {
 
     return (
         <div className="Login">
+            <LoginRegisterPic />
             <AccountPassword account={account} setAccount={setAccount} password={password} setPassword={setPassword} />
             <div className="Login_Buttons">
                 <input type="button" value="登入" onClick={() => {

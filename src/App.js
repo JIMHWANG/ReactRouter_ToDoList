@@ -7,9 +7,10 @@ import { Routes, Route, Link } from "react-router-dom";
 function App() {
   return (
     <>
-      <h1>
+      {/* <h1>
         <Link to="/">Online ToDoList</Link>
-      </h1>
+      </h1> */}
+      <Home_Login />
       <Routes>
         <Route path="/" element={<Home_Login />} />
         <Route path="Function" element={<Function />} />
