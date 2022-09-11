@@ -17,17 +17,23 @@ function DeleteItem(DItem, DItemIndex, ItemList, setToDoListItems) {
 }
 
 function ShowItems({ ToDoListItems, setToDoListItems, ItemDisplayValue }) {
+
+    const NewToDoListItems = [...ToDoListItems];
+
     return (
         <ul className={`${!ItemDisplayValue}ItemDisPlay`}>
             {
-                ToDoListItems.map((ToDoListItem, Index) => {
+                NewToDoListItems.map((ToDoListItem, Index) => {
 
                     return (
                         <li key={Index}>
-                            <input type="checkbox" name="" id="" />
-                            <span>{ToDoListItem.item}</span>
+                            <input type="checkbox" checked={ToDoListItem.completed} onChange={() => {
+                                ToDoListItem.completed = !ToDoListItem.completed;
+                                setToDoListItems(NewToDoListItems);
+                            }} />
+                            <span className={`${ToDoListItem.completed}ItemComplete`}>{ToDoListItem.item}</span>
                             <Link to="#" onClick={() => {
-                                DeleteItem(ToDoListItem.item, Index, ToDoListItems, setToDoListItems);
+                                DeleteItem(ToDoListItem.item, Index, NewToDoListItems, setToDoListItems);
                             }}></Link>
                         </li>
                     )
