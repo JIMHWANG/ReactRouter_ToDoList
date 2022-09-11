@@ -16,7 +16,7 @@ function DeleteItem(DItem, DItemIndex, ItemList, setToDoListItems) {
     setToDoListItems(ItemList);
 }
 
-function ShowItems({ ToDoListItems, setToDoListItems, ItemDisplayValue }) {
+function ShowItems({ ToDoListItems, setToDoListItems, ItemDisplayValue, CurrentStatus }) {
 
     const NewToDoListItems = [...ToDoListItems];
 
@@ -24,11 +24,13 @@ function ShowItems({ ToDoListItems, setToDoListItems, ItemDisplayValue }) {
         <ul className={`${!ItemDisplayValue}ItemDisPlay`}>
             {
                 NewToDoListItems.map((ToDoListItem, Index) => {
-
+                    if (ToDoListItem.show === false) { return; }
                     return (
                         <li key={Index}>
                             <input type="checkbox" checked={ToDoListItem.completed} onChange={() => {
                                 ToDoListItem.completed = !ToDoListItem.completed;
+                                CurrentStatus !== "全部" ? ToDoListItem.show = !ToDoListItem.show : ToDoListItem.show = true;
+                                // ToDoListItem.show = !ToDoListItem.show;
                                 setToDoListItems(NewToDoListItems);
                             }} />
                             <span className={`${ToDoListItem.completed}ItemComplete`}>{ToDoListItem.item}</span>
@@ -43,9 +45,10 @@ function ShowItems({ ToDoListItems, setToDoListItems, ItemDisplayValue }) {
     )
 }
 
-const TargetStatus = (Event, StatusList, setStatusList, setCurrentStatus) => {
+const TargetStatus = (Event, StatusList, setStatusList, setCurrentStatus, ToDoListItems, setToDoListItems) => {
     let TargetValue;
     const NewStatusList = [...StatusList];
+    const NewToDoListItems = [...ToDoListItems];
     Event.target.id === "all" ? TargetValue = "全部" : Event.target.id === "InCompleted" ? TargetValue = "待完成" : TargetValue = "已完成";
     setCurrentStatus(TargetValue);
 
@@ -56,15 +59,26 @@ const TargetStatus = (Event, StatusList, setStatusList, setCurrentStatus) => {
         }
     })
     setStatusList(NewStatusList);
+
+    ToDoListItems.map((EachToDoItem) => {
+        if (TargetValue == "全部") {
+            EachToDoItem.show = true
+        } else if (TargetValue == "待完成") {
+            EachToDoItem.completed === false ? EachToDoItem.show = true : EachToDoItem.show = false;
+        } else if (TargetValue == "已完成") {
+            EachToDoItem.completed === true ? EachToDoItem.show = true : EachToDoItem.show = false;
+        }
+    })
+    setToDoListItems(ToDoListItems);
 }
 
-function ShowStatusList({ StatusList, setStatusList, setCurrentStatus }) {
+function ShowStatusList({ StatusList, setStatusList, setCurrentStatus, ToDoListItems, setToDoListItems }) {
     return (
         <>
             {
                 StatusList.map((EachStatus, EachStatusIndex) => {
                     return (
-                        <Link key={EachStatusIndex} className={`${EachStatus.active}StatusDisplay`} to="#" id={EachStatus.EngStatus} onClick={(e) => { TargetStatus(e, StatusList, setStatusList, setCurrentStatus) }}>{EachStatus.status}</Link>
+                        <Link key={EachStatusIndex} className={`${EachStatus.active}StatusDisplay`} to="#" id={EachStatus.EngStatus} onClick={(e) => { TargetStatus(e, StatusList, setStatusList, setCurrentStatus, ToDoListItems, setToDoListItems) }}>{EachStatus.status}</Link>
                     )
                 })
             }
@@ -125,18 +139,18 @@ function MainFunction() {
                     <a href="#" onClick={() => {
                         if (!InputItem) { return; }
 
-                        setToDoListItems([...ToDoListItems, { item: InputItem, completed: false }]);
+                        setToDoListItems([...ToDoListItems, { item: InputItem, completed: false, show: true }]);
                         setInputItem('');
 
                     }}><i></i></a>
                 </div>
                 <div className="ToDoList_Content">
                     <div className="ToDoList_ItemStatus">
-                        <ShowStatusList StatusList={StatusList} setStatusList={setStatusList} setCurrentStatus={setCurrentStatus} />
+                        <ShowStatusList StatusList={StatusList} setStatusList={setStatusList} setCurrentStatus={setCurrentStatus} ToDoListItems={ToDoListItems} setToDoListItems={setToDoListItems} />
                     </div>
                     <div className="ToDoList_Items">
                         <p className={`NoItems ${ItemDisplayValue}ItemDisPlay`}>目前尚無代辦事項</p>
-                        <ShowItems ToDoListItems={ToDoListItems} setToDoListItems={setToDoListItems} ItemDisplayValue={ItemDisplayValue} />
+                        <ShowItems ToDoListItems={ToDoListItems} setToDoListItems={setToDoListItems} ItemDisplayValue={ItemDisplayValue} CurrentStatus={CurrentStatus} />
                     </div>
                     <div className="TargetSumAndRemoveAll">
                         <TartgetStatusItemSum CurrentStatus={CurrentStatus} EachStatusSum={EachStatusSum} />
