@@ -96,6 +96,11 @@ function TartgetStatusItemSum({ CurrentStatus, EachStatusSum }) {
     )
 }
 
+function RemoveAllCompleteItems(ToDoListItems, setToDoListItems) {
+    const NewToDoListItems = [...ToDoListItems];
+    setToDoListItems(NewToDoListItems.filter((EachToDoItem) => EachToDoItem.completed !== true));
+}
+
 function MainFunction() {
 
     const [ToDoListItems, setToDoListItems] = useState([]);
@@ -154,7 +159,9 @@ function MainFunction() {
                     </div>
                     <div className="TargetSumAndRemoveAll">
                         <TartgetStatusItemSum CurrentStatus={CurrentStatus} EachStatusSum={EachStatusSum} />
-                        <input type="button" value="移除已完成項目" />
+                        <input type="button" value="移除已完成項目" onClick={() => {
+                            RemoveAllCompleteItems(ToDoListItems, setToDoListItems);
+                        }} />
                     </div>
                 </div>
             </div>
