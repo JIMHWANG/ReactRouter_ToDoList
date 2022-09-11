@@ -43,33 +43,55 @@ function ShowItems({ ToDoListItems, setToDoListItems, ItemDisplayValue }) {
     )
 }
 
-const TargetStatus = (Event, setCurrentStatus) => {
+const TargetStatus = (Event, StatusList, setStatusList, setCurrentStatus) => {
     let TargetValue;
+    const NewStatusList = [...StatusList];
     Event.target.id === "all" ? TargetValue = "全部" : Event.target.id === "InCompleted" ? TargetValue = "待完成" : TargetValue = "已完成";
     setCurrentStatus(TargetValue);
+
+    NewStatusList.map((EachStatus) => {
+        EachStatus.active = false;
+        if (EachStatus.status === TargetValue) {
+            EachStatus.active = !EachStatus.active;
+        }
+    })
+    setStatusList(NewStatusList);
+}
+
+function ShowStatusList({ StatusList, setStatusList, setCurrentStatus }) {
+    return (
+        <>
+            {
+                StatusList.map((EachStatus, EachStatusIndex) => {
+                    return (
+                        <Link key={EachStatusIndex} className={`${EachStatus.active}StatusDisplay`} to="#" id={EachStatus.EngStatus} onClick={(e) => { TargetStatus(e, StatusList, setStatusList, setCurrentStatus) }}>{EachStatus.status}</Link>
+                    )
+                })
+            }
+        </>
+    )
 }
 
 function TartgetStatusItemSum({ CurrentStatus, EachStatusSum }) {
     let TartgetStatusItemString;
-
     CurrentStatus === "全部" ? TartgetStatusItemString = `${EachStatusSum.Completed} 個已完成項目，${EachStatusSum.InCompleted} 個待完成項目` : CurrentStatus === "已完成" ? TartgetStatusItemString = `${EachStatusSum.Completed} 個已完成項目` : TartgetStatusItemString = `${EachStatusSum.InCompleted} 個待完成項目`;
-
     return (
         <>
             <p>{TartgetStatusItemString}</p>
         </>
     )
-
-
 }
-
-
 
 function MainFunction() {
 
     const [ToDoListItems, setToDoListItems] = useState([]);
     const [InputItem, setInputItem] = useState('');
     const [ItemDisplayValue, setItemDisplayValue] = useState(false);
+    const [StatusList, setStatusList] = useState([
+        { status: "全部", EngStatus: "all", active: true },
+        { status: "待完成", EngStatus: "InCompleted", active: false },
+        { status: "已完成", EngStatus: "Completed", active: false }
+    ])
     const [CurrentStatus, setCurrentStatus] = useState('全部');
     const [EachStatusSum, setEachStatusSum] = useState({});
 
@@ -110,9 +132,7 @@ function MainFunction() {
                 </div>
                 <div className="ToDoList_Content">
                     <div className="ToDoList_ItemStatus">
-                        <Link to="#" id="all" onClick={(e) => { TargetStatus(e, setCurrentStatus) }}>全部</Link>
-                        <Link to="#" id="InCompleted" onClick={(e) => { TargetStatus(e, setCurrentStatus) }}>待完成</Link>
-                        <Link to="#" id="Completed" onClick={(e) => { TargetStatus(e, setCurrentStatus) }}>已完成</Link>
+                        <ShowStatusList StatusList={StatusList} setStatusList={setStatusList} setCurrentStatus={setCurrentStatus} />
                     </div>
                     <div className="ToDoList_Items">
                         <p className={`NoItems ${ItemDisplayValue}ItemDisPlay`}>目前尚無代辦事項</p>
