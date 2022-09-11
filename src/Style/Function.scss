@@ -73,10 +73,6 @@
         }
 
         .ToDoList_Items {
-            // display: flex;
-            // justify-content: center;
-            // align-items: center;
-            // padding: 120px 0 120px 0;
             font-weight: bold;
 
             .NoItems {
@@ -94,25 +90,48 @@
                     width: 80%;
                     padding: 10px 0;
                     position: relative;
+                    display: flex;
+                    align-items: center;
 
                     input[type="checkbox"] {
                         margin-right: 10px;
+                        width: 10%;
                     }
+
+                    span {
+                        width: 80%;
+                    }
+
+                    a {
+                        text-decoration: none;
+                        opacity: 0;
+                    }
+
+                    a::after {
+                        content: "\2715"
+                    }
+
                 }
 
-                li::after {
-                    content: "\2715";
-                    display: none;
-                    position: absolute;
-                    left: 100%;
-                    top: 50%;
-                    transform: translate(-100%, -50%);
+                li:hover a {
+                    opacity: 1;
                 }
 
-                li:hover::after {
-                    display: inline;
-                }
+            }
+        }
 
+        .TargetSumAndRemoveAll {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 10px;
+
+            p {
+                display: flex;
+                align-items: center;
+            }
+
+            input[type="button"] {
+                background: #fff;
             }
         }
     }

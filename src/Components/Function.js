@@ -5,8 +5,18 @@ import React from "react";
 
 const { useState, useEffect } = React;
 
+function DeleteItem(DItem, DItemIndex, ItemList, setToDoListItems) {
+    ItemList = ItemList.filter((EachItem, EachItemIndex) => {
+        if (EachItem.item === DItem && DItemIndex === EachItemIndex) {
+            return false;
+        }
+        return true;
+    });
 
-function ShowItems({ ToDoListItems, ItemDisplayValue }) {
+    setToDoListItems(ItemList);
+}
+
+function ShowItems({ ToDoListItems, setToDoListItems, ItemDisplayValue }) {
     return (
         <ul className={`${!ItemDisplayValue}ItemDisPlay`}>
             {
@@ -15,13 +25,36 @@ function ShowItems({ ToDoListItems, ItemDisplayValue }) {
                     return (
                         <li key={Index}>
                             <input type="checkbox" name="" id="" />
-                            {ToDoListItem.item}
+                            <span>{ToDoListItem.item}</span>
+                            <Link to="#" onClick={() => {
+                                DeleteItem(ToDoListItem.item, Index, ToDoListItems, setToDoListItems);
+                            }}></Link>
                         </li>
                     )
                 })
             }
         </ul>
     )
+}
+
+const TargetStatus = (Event, setCurrentStatus) => {
+    let TargetValue;
+    Event.target.id === "all" ? TargetValue = "全部" : Event.target.id === "InCompleted" ? TargetValue = "待完成" : TargetValue = "已完成";
+    setCurrentStatus(TargetValue);
+}
+
+function TartgetStatusItemSum({ CurrentStatus, EachStatusSum }) {
+    let TartgetStatusItemString;
+
+    CurrentStatus === "全部" ? TartgetStatusItemString = `${EachStatusSum.Completed} 個已完成項目，${EachStatusSum.InCompleted} 個待完成項目` : CurrentStatus === "已完成" ? TartgetStatusItemString = `${EachStatusSum.Completed} 個已完成項目` : TartgetStatusItemString = `${EachStatusSum.InCompleted} 個待完成項目`;
+
+    return (
+        <>
+            <p>{TartgetStatusItemString}</p>
+        </>
+    )
+
+
 }
 
 
@@ -31,6 +64,9 @@ function MainFunction() {
     const [ToDoListItems, setToDoListItems] = useState([]);
     const [InputItem, setInputItem] = useState('');
     const [ItemDisplayValue, setItemDisplayValue] = useState(false);
+    const [CurrentStatus, setCurrentStatus] = useState('全部');
+    const [EachStatusSum, setEachStatusSum] = useState({});
+
 
     useEffect(() => {
 
@@ -39,6 +75,13 @@ function MainFunction() {
         } else {
             setItemDisplayValue(false);
         }
+
+        setEachStatusSum({
+            all: Object.keys(ToDoListItems).length,
+            InCompleted: ToDoListItems.filter(Item => Item.completed === false).length,
+            Completed: ToDoListItems.filter(Item => Item.completed === true).length,
+        })
+
     }, [ToDoListItems])
 
     return (
@@ -61,13 +104,17 @@ function MainFunction() {
                 </div>
                 <div className="ToDoList_Content">
                     <div className="ToDoList_ItemStatus">
-                        <Link to="#">全部</Link>
-                        <Link to="#">待完成</Link>
-                        <Link to="#">已完成</Link>
+                        <Link to="#" id="all" onClick={(e) => { TargetStatus(e, setCurrentStatus) }}>全部</Link>
+                        <Link to="#" id="InCompleted" onClick={(e) => { TargetStatus(e, setCurrentStatus) }}>待完成</Link>
+                        <Link to="#" id="Completed" onClick={(e) => { TargetStatus(e, setCurrentStatus) }}>已完成</Link>
                     </div>
                     <div className="ToDoList_Items">
                         <p className={`NoItems ${ItemDisplayValue}ItemDisPlay`}>目前尚無代辦事項</p>
-                        <ShowItems ToDoListItems={ToDoListItems} ItemDisplayValue={ItemDisplayValue} />
+                        <ShowItems ToDoListItems={ToDoListItems} setToDoListItems={setToDoListItems} ItemDisplayValue={ItemDisplayValue} />
+                    </div>
+                    <div className="TargetSumAndRemoveAll">
+                        <TartgetStatusItemSum CurrentStatus={CurrentStatus} EachStatusSum={EachStatusSum} />
+                        <input type="button" value="移除已完成項目" />
                     </div>
                 </div>
             </div>

@@ -28,7 +28,7 @@ function Register() {
         Registerxhr.onload = function () {
             if (JSON.parse(Registerxhr.responseText).success) {
                 alert(`註冊成功 : ${JSON.parse(Registerxhr.responseText).message}`)
-                RegisterNavigate("/");
+                RegisterNavigate("/ReactRouter_ToDoList");
             } else {
                 alert(`註冊失敗 : ${JSON.parse(Registerxhr.responseText).message}`)
             }
